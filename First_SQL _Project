@@ -1,0 +1,207 @@
+-- 1. Create a database named LibrarySystem.
+create Database LibrarySystem;
+-- 2. Create a table for Authors with columns: AuthorID (auto-increment), AuthorName, Nationality, Email.
+Use LibrarySystem;
+CREATE table Authors(
+AuthorID INT PRIMARY KEY auto_increment,
+AuthorName varchar(100) NOT NULL,
+Nationality varchar(100) NOT NULL,
+Email varchar(100) default "Not Available"
+);
+-- 3. Create a table for Books with columns: BookID (auto-increment), Title, AuthorID (foreign key), PublicationYear, Genre, ISBN.
+CREATE table Books(
+BookID INT PRIMARY KEY auto_increment,
+Title VARCHAR(100) NOT NULL,
+AuthorID int NOT NULL,
+PublicationYear int NOT NULL,
+Genre varchar(100) NOT NULL,
+ISBN varchar(100) Not NULL unique
+);
+-- 4. Create a table for Members with columns: MemberID (auto-increment), FullName, Email, JoinDate.
+CREATE table Members(
+MemberID INT PRIMARY KEY AUTO_INCREMENT,
+FullName VARCHAR(100) NOT NULL,
+EMAIL VARCHAR(100) NOT NULL,
+JoinDate Date NOT NULL
+);
+-- 5. Create a table for Loans with columns: LoanID (auto-increment), BookID (foreign key), MemberID (foreign key), LoanDate, ReturnDate.
+CREATE TABLE Loans(
+LoanID INT PRIMARY KEY auto_increment,
+BookID INT NOT NULL,
+MemberID INT NOT NULL,
+LoanDate Date NOT NULL,
+ReturnDate Date
+);
+-- 6. Insert 3 authors with different nationalities and emails.
+INSERT INTO authors(AuthorName,Nationality,Email)
+Values("William Shakespeare","British", "william@gmail.com"),
+("Danielle Steel","	American","steel@gmail.com"),
+("Eiichiro Oda","Japanese",default);
+SELECT * FROM authors;
+-- 7. Insert 5 books with varying genres and publication years, linked to the authors.
+Desc Books;
+
+INSERT INTO books (Title, AuthorID, PublicationYear, Genre, ISBN)
+VALUES
+  ("Macbeth", 1, 1623, "Shakespearean tragedy", 2422527775),
+  ("The Tempest", 1, 1611, "Shakespearean comedy, Tragicomedy", 6672742766),
+  ("A Mind of Her Own", 2, 2025, "Women's Fiction, Contemporary Romance", 874121212),
+  ("Zoya", 2, 1987, "Romance novel", 23577888455),
+  ("One Piece", 3, 1999, "Adventure, Fantasy, Comedy, Science Fiction", 45451212155);
+  
+-- 8. Insert 4 members with different join dates.
+INSERT INTO members(FullName,EMAIL,JoinDate)
+VALUES 
+("Mohd Ayan Khan", "ayan.khan@gmail.com","2024-01-01"),
+("Vani Nayal", "vani_nayal@gmail.com","2023-11-06"),
+("Shivani Goyal", "Shiavni_Goyal@gmail.com","2022-11-06"),
+("Shivangi Garg", "Shiavngi_Garg@gmail.com","2021-11-06");
+-- 9. Insert 6 loan records, with some books not yet returned (ReturnDate NULL).
+
+use librarysystem;
+-- 10. Update the email of an author to remove leading/trailing spaces using TRIM.
+INSERT INTO Authors (AuthorName, Nationality, Email) VALUES
+('Jane Austen', 'British', 'jane.austen@example.com'),
+('Leo Tolstoy', 'Russian', 'leo.tolstoy@example.com'),
+('Charles Dickens', 'British', 'charles.dickens@example.com'),
+('Ernest Hemingway', 'American', 'ernest.hemingway@example.com'),
+('F. Scott Fitzgerald', 'American', 'f.scott@example.com'),
+('Herman Melville', 'American', 'herman.melville@example.com'),
+('George Orwell', 'British', 'george.orwell@example.com'),
+('James Joyce', 'Irish', 'james.joyce@example.com'),
+('Virginia Woolf', 'British', 'virginia.woolf@example.com'),
+('Mark Twain', 'American', 'mark.twain@example.com'),
+('Emily Dickinson', 'American', 'emily.dickinson@example.com'),
+('Gabriel García Márquez', 'Colombian', 'gabriel.garcia@example.com'),
+('Fyodor Dostoevsky', 'Russian', 'fyodor.dostoevsky@example.com'),
+('Franz Kafka', 'Austro-Hungarian', 'franz.kafka@example.com'),
+('J.R.R. Tolkien', 'British', 'j.r.r.tolkien@example.com'),
+('Agatha Christie', 'British', 'agatha.christie@example.com'),
+('Chinua Achebe', 'Nigerian', 'chinua.achebe@example.com'),
+('Toni Morrison', 'American', 'toni.morrison@example.com'),
+('Jane Eyre', 'British', 'jane.eyre@example.com'),
+('Chinua Achebe', 'Nigerian', 'chinua.achebe2@example.com'),
+('Chimamanda Ngozi Adichie', 'Nigerian', 'chimamanda.adichie@example.com'),
+('Haruki Murakami', 'Japanese', 'haruki.murakami@example.com'),
+('Margaret Atwood', 'Canadian', 'margaret.atwood@example.com'),
+('Salman Rushdie', 'British-Indian', 'salman.rushdie@example.com'),
+('Gabriel García Márquez', 'Colombian', 'gabriel.garcia2@example.com'),
+('Isabel Allende', 'Chilean-American', 'isabel.allende@example.com'),
+('Milan Kundera', 'Czech-French', 'milan.kundera@example.com'),
+('Orhan Pamuk', 'Turkish', 'orhan.pamuk@example.com'),
+('Ngũgĩ wa Thiongo', 'Kenyan', 'ngugi.wathiongo@example.com  ');
+
+SELECT * FROM authors;
+SET SQL_SAFE_UPDATES = 0;
+UPDATE authors set email = TRIM(email) where AuthorName = 'Ngũgĩ wa Thiongo';
+
+-- 11. Update all book titles to uppercase for books in the 'Mystery' genre.
+INSERT INTO Books (Title, AuthorID, PublicationYear, Genre, ISBN) VALUES
+('Pride and Prejudice', 4, 1813, 'Romance', 97801411439518),
+('To Kill a Mockingbird', 24, 1960, 'Southern Gothic', 97800651120084),
+('War and Peace', 5, 1869, 'Historical Fiction', 97801404459176),
+('Great Expectations', 7, 1861, 'Bildungsroman', 97801414539563),
+('The Old Man and the Sea', 8, 1952, 'Novella', 97806584801223),
+('The Great Gatsby', 9, 1925, 'Tragedy', 97807435273565),
+('Moby Dick', 10, 1851, 'Adventure', 97801414539594),
+('Nineteen Eighty-Four', 11, 1949, 'Dystopian', 97804515324935),
+('Ulysses', 12, 1922, 'Modernist', 97801413182437),
+('To the Lighthouse', 13, 1927, 'Modernist', 97801411392665),
+('The Adventures of Tom Sawyer', 14, 1876, 'Adventure', 97801451439631),
+('The Scarlet Letter', 17, 1850, 'Romance', 97801414397323),
+('One Hundred Years of Solitude', 16, 1967, 'Magical Realism', 97800631120084),
+('Crime and Punishment', 17, 1866, 'Psychological Fiction', 97801404349138),
+('The Metamorphosis', 18, 1915, 'Absurdist Fiction', 97805532313690),
+('The Lord of the Rings', 19, 1954, 'Fantasy', 978061826053274),
+('And Then There Were None', 20, 1939, 'Mystery', 9780062059935362),
+('Things Fall Apart', 21, 1958, 'Postcolonial Literature', 978038547354542),
+('Beloved', 22, 1987, 'Historical Fiction', 97803077378044),
+('Jane Eyre', 23, 1847, 'Gothic Romance', 978014143935600),
+('The God of Small Things', 25, 1997, 'Literary Fiction', 978003561120084),
+('The Handmaid\'s Tale', 26, 1985, 'Dystopian', 978038549350818),
+('Midnight\'s Children', 27, 1981, 'Magical Realism', 978014135044608),
+('Love in the Time of Cholera', 16, 1985, 'Romance', 978014011995205),
+('The Unbearable Lightness of Being', 28, 1984, 'Philosophical Fiction', 978006024901412),
+('The Alchemist', 29, 1988, 'Philosophical Fiction', 97800611200584),
+('Blindness', 30, 1995, 'Dystopian', 978015602438764),
+('My Name Is Red', 31, 1998, 'Historical Fiction', 978037570643864),
+('The Remains of the Day', 32, 1989, 'Literary Fiction', 978067249731394),
+('A Bend in the River', 21, 1979, 'Postcolonial Literature', 97803244275702019),
+('The Kite Runner', 31, 2003, 'Literary Fiction', 9781594480004224),
+('A Thousand Splendid Suns', 31, 2007, 'Historical Fiction', 97815942424483851),
+('Homegoing', 32, 2016, 'Historical Fiction', 9781104251971129),
+('Americanah', 22, 2013, 'Literary Fiction', 978030796129532),
+('Norwegian Wood', 23, 1987, 'Coming-of-age', 978037570425020),
+('The Wind-Up Bird Chronicle', 23, 1994, 'Magical Realism', 97806729775430),
+('The God of Small Things', 22, 1997, 'Literary Fiction', 978006112420084),
+('The Handmaid\'s Tale', 23, 1985, 'Dystopian', 978038549052818),
+('Midnight\'s Children', 24, 1981, 'Magical Realism', 978014104324608),
+('Love in the Time of Cholera', 13, 1985, 'Romance', 9780140112549905),
+('The Unbearable Lightness of Being', 25, 1984, 'Philosophical Fiction', 9780060948601412),
+('The Alchemist', 26, 1988, 'Philosophical Fiction', 97800611286570084),
+('Blindness', 27, 1995, 'Dystopian', 9780156767028764),
+('My Name Is Red', 28, 1998, 'Historical Fiction', 97803757464706864),
+('The Remains of the Day', 29, 1989, 'Literary Fiction', 9780679764731394),
+('A Bend in the River', 18, 1979, 'Postcolonial Literature', 97803476675702019),
+('The Kite Runner', 31, 2003, 'Literary Fiction', 978159448467460003),
+('A Thousand Splendid Suns', 31, 2007, 'Historical Fiction', 97814676594483851),
+('Homegoing', 32, 2016, 'Historical Fiction', 9781176401971129),
+('Americanah', 22, 2013, 'Literary Fiction', 9780307967461292);
+
+SELECT * FROM books;
+UPDATE books SET Title = upper(Title) where Genre = "Mystery";
+-- 12. Update a member's email by replacing their domain (e.g., '@old.com' to '@new.com') using REPLACE.
+UPDATE authors
+SET Email = CONCAT(LEFT(Email, POSITION('@' IN Email) - 1), '@new.com') where AuthorID = 1;
+SELECT * FROM authors;
+
+-- 13. Select all books and their authors where the book title contains 'code' (case-insensitive) using LIKE and LOWER.
+
+SELECT Title , AuthorName FROM books
+JOIN authors ON
+books.AuthorID = authors.AuthorID
+where lower(Title) Like '%code%';
+
+-- 14. Join Loans, Members, and Books to show active loans (ReturnDate NULL) with member names and book titles.
+INSERT INTO Loans (BookID, MemberID, LoanDate, ReturnDate) VALUES
+(1, 1, '2025-05-01', '2025-05-15'),
+(3, 2, '2025-05-03', NULL),
+(5, 1, '2025-05-05', '2025-05-19'),
+(10, 3, '2025-05-07', '2025-05-21'),
+(15, 2, '2025-05-09', NULL),
+(20, 4, '2025-05-11', '2025-05-25'),
+(25, 1, '2025-05-13', NULL),
+(30, 5, '2025-05-15', '2025-05-29'),
+(35, 2, '2025-05-17', NULL),
+(40, 3, '2025-05-19', '2025-06-02');
+
+SELECT FullName , Title FROM Loans
+JOIN members ON 
+ members.MemberID = loans.MemberID
+JOIN books ON books.BookID = Loans.BookID
+where ReturnDate is NULL;
+
+-- 15. Use SUBSTRING and POSITION to extract the first name from Members' FullName.
+SELECT substring(FullName,1,position(' ' IN FullName)) FROM members;
+
+-- 16. Select authors whose nationality starts with 'A' using LIKE.
+SELECT AuthorName FROM authors where Nationality LIKE 'A%';
+-- 17. Use UPPER to display all book genres in uppercase and count books per genre.
+SELECT distinct(upper(Genre)) FROM books;
+-- 18. Delete all loans that were returned before 2025-05-21.
+use librarysystem;
+DELETE FROM loans where ReturnDate < '2025-5-21';
+SELECT * FROM loans;
+-- 19. Select books where the ISBN ends with '1234' using LIKE.
+INSERT INTO Books (Title, AuthorID, PublicationYear, Genre, ISBN) VALUES
+('Twelfth Night', 1, 1602, 'Plays,
+Fiction,
+Classics,
+School,
+Romance,
+Literature,
+Poetry,
+Read For School,
+Comedy,
+Theatre', 978014114391234);
+SELECT * FROM books where ISBN LIKE '%1234';
