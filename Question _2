@@ -1,0 +1,103 @@
+Absolutely! Here's an **advanced SQL question** designed to challenge your understanding of **window functions, common table expressions (CTEs), subqueries, and performance thinking**:
+
+---
+
+### 🔍 **Advanced SQL Challenge: Customer Purchase Patterns**
+
+**Scenario:**
+
+You are working as a data analyst for an e-commerce company. The company wants to understand customer purchasing behavior over time.
+
+You are given two tables:
+
+#### Table: `customers`
+
+| customer\_id | name    | signup\_date |
+| ------------ | ------- | ------------ |
+| 1            | Alice   | 2023-01-10   |
+| 2            | Bob     | 2023-02-05   |
+| 3            | Charlie | 2023-02-15   |
+
+#### Table: `orders`
+
+| order\_id | customer\_id | order\_date | order\_amount |
+| --------- | ------------ | ----------- | ------------- |
+| 101       | 1            | 2023-01-15  | 150           |
+| 102       | 1            | 2023-02-17  | 200           |
+| 103       | 2            | 2023-02-20  | 300           |
+| 104       | 3            | 2023-03-01  | 100           |
+| 105       | 1            | 2023-03-10  | 250           |
+| 106       | 2            | 2023-03-25  | 50            |
+
+---
+
+### ❓**Task:**
+
+Write an SQL query to return the following information:
+
+* `customer_id`
+* `name`
+* `first_order_date`
+* `second_order_date`
+* `days_between_orders`
+* `repeat_customer_flag` — `'Yes'` if the customer placed more than one order, otherwise `'No'`
+* `average_order_value` — for customers with more than one order
+
+---
+
+### 💡**Requirements & Constraints:**
+
+1. Use **window functions** to get the first and second order dates per customer.
+2. Use **CTEs or subqueries** — no temporary tables.
+3. Include **NULL** in `second_order_date`, `days_between_orders`, and `average_order_value` if not applicable.
+4. Ensure your logic scales even if a customer has more than two orders.
+
+---
+
+create database advanced_level;
+create table customers(
+customer_id INT primary key auto_increment,
+name varchar(500),
+signup_date date
+);
+use advanced_level;
+INSERT INTO customers(name, signup_date)
+Values ("Alice" , "2023-01-10"),("Bob","2023-02-05"),("Charlie","2023-02-15");
+
+select * from customers;
+
+create table orders(
+order_id INT primary key auto_increment,	
+customer_id INT NOT NULL,
+order_date DATE	,
+order_amount FLOAT NOT NULL) auto_increment = 101;
+
+INSERT INTO orders(customer_id,order_date,order_amount)
+value (1,"2023-01-15",150),(1,"2023-02-17",200),(2,"2023-02-20",300),(3,"2023-03-01",100),(1,"2023-03-10",250),(2,"2023-03-25",50);
+
+
+WIth first_order_date_customer as (
+select customer_id, MIN(order_date) as first_order_date FROM orders GROUP BY customer_Id
+),
+second_order_date_customer as (
+SELECT customer_id , order_date as second_order_date FROM (
+SELECT customer_id ,order_date, row_number() over (partition by customer_id order by order_date) as second_order_date_number FROM orders) as a WHERE second_order_date_number = 2
+),
+days_between_order as (SELECT second_order_date_customer.customer_id,datediff(second_order_date,first_order_date) as days_between_orders
+FROM second_order_date_customer LEFT JOIN first_order_date_customer ON second_order_date_customer.customer_id = first_order_date_customer.customer_id
+),
+repeat_customer_flag as (SELECT customer_id , CASE WHEN Total_visit > 1 THEN "Yes" ELSE "No" END as repeat_customer_flag FROM (
+SELECT customer_id , MAX(Total_visit_count) as "Total_visit" FROM 
+(SELECT customer_id , row_number() over (partition by customer_id order by order_date) as Total_visit_count FROM orders) as a 
+GROUP BY customer_id) as b
+),
+Avg_order as (SELECT customer_id , AVG(order_amount) as average_orders FROM orders GROUP BY customer_id)
+
+SELECT customers.customer_id,name , first_order_date , second_order_date , days_between_orders , repeat_customer_flag ,average_orders
+FROM customers 
+LEFT JOIN first_order_date_customer on first_order_date_customer.customer_id = customers.customer_id  
+LEFT JOIN second_order_date_customer on second_order_date_customer.customer_id = customers.customer_id  
+LEFT JOIN days_between_order on days_between_order.customer_id = customers.customer_id 
+LEFT JOIN repeat_customer_flag on repeat_customer_flag.customer_id = customers.customer_id  
+LEFT JOIN Avg_order on Avg_order.customer_id = customers.customer_id 
+;
