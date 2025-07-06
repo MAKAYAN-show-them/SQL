@@ -1,0 +1,32 @@
+
+excercise_2;
+
+create table deloitte_ex_customer(
+loan_id INT PRIMARY KEY auto_increment,
+customer_id int,
+loan_amount decimal,
+due_date date);
+
+CREATE table deloitte_payment(
+payment_id INT PRIMARY KEY auto_increment,
+loan_id INT,
+payment_date date,
+amount_paid decimal
+);
+
+INSERT INTO deloitte_ex_customer(customer_id,loan_amount,due_date) 
+VALUES (1,5000.00,'2023-01-15') ,
+(2,8000.00,'2023-02-20'),(3,10000.00,'2023-03-10'),(4,6000,'2023-04-05'),(5,7000.00,'2023-05-01');
+
+INSERT INTO deloitte_payment(loan_id,payment_date,amount_paid)
+VALUES(1,'2023-01-10',2000),(1,'2023-02-10',1500),(2,'2023-02-20',8000),(3,'2023-04-20',5000),(4,'2023-03-15',2000),(4,'2023-04-02',4000),(5,'2023-04-02',4000),(5,'2023-05-02',3000);
+
+SELECT * FROM deloitte_ex_customer;
+SELECT * FROM deloitte_payment;
+
+SELECT dc.loan_id , loan_amount, due_date,
+CASE WHEN sum(amount_paid) >= loan_amount THEN 1 ELSE 0 END as fully_paid_flag ,
+CASE WHEN due_date >= max(payment_date) THEN 1 ELSE 0 END as on_time_flag
+FROM deloitte_ex_customer dc 
+JOIN deloitte_payment dp ON dp.loan_id = dc.loan_id
+GROUP BY dc.loan_id , loan_amount, due_date;
